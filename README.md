@@ -1,40 +1,23 @@
 # rnr-meleros
+
 Red Neuronal Recurrente (Recurrent Neural Network RNN) aplicada sobre lecturas de acelerometro tomadas de Osos Meleros para predecir el comportamiento en tiempo real a partir de los valores medidos. 
 
----
-Generado copilot
+## Intro
 
-# Neural Network Application
+Se planteo el problema como uno de clasificación, ya que se desea inferir el comportamiento del animal a partir de las lecturas de un Acelerometro de 3 ejes y del calculo instantaneo ODBA del animal. Se busca evaluar distintos tipos de topologias de redes neuronales para comparar su performance para este tipo de problemas. 
 
-This application trains two different types of neural networks: a classic neural network classifier and a recurrent neural network.
+El repositorio contiene el codigo con el cual se implementaron:
 
-## Structure
+- Redes neuronales clasicas (Feedforward Neural Networks)
+- Redes neuronales recurrentes (Recurrent Neural Netwoks)
 
-The application is structured into two main parts: `classic_nn` and `rnn`. Each part has its own model definition, data processing, and training scripts.
+## Estructura
 
-## Setup
 
-To set up the application, follow these steps:
 
-1. Clone the repository.
-2. Install the required Python packages using the command `pip install -r requirements.txt`.
+## Trabajos a futuro
 
-## Usage
+- Usar los modelos mejor performantes para realizar la clasificacion en tiempo real y contrastar con datos de una camara en tiempo real.
+- Validar los modelos con otro/s dispositivo/s de medicion (Datalogger de otras marcas, agregar giroscopo, etc.)
+- Implementar los mejores modelos para este caso de uso embebidas en el dispositivo de medición para detectar y relevar los comportamientos directamente en el dispositivo de medicion. 
 
-To run the application, use the command `python src/main.py`. This will initialize and train both the classic neural network and the recurrent neural network.
-
-## Testing
-
-Unit tests for both the classic neural network and the recurrent neural network are included in the `tests/` directory. To run the tests, use the command `python -m unittest discover tests`.
-
-## Data
-
-The data used to train the neural networks is stored in the `data/` directory. The `classic_nn` directory contains data for the classic neural network, and the `rnn` directory contains data for the recurrent neural network.
-
-## Contributing
-
-Contributions are welcome. Please submit a pull request with your changes.
-
-## License
-
-This project is licensed under the MIT License.

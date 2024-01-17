@@ -2,14 +2,15 @@ from keras.models import Sequential
 from keras.layers import Dense
 
 
-class ClassicNN:
+
+class ClassicBaseNN:
     def __init__(self):
         self.model = Sequential()
 
     # Build base model 4 input nodes, 1 hidden layer with 4 nodes, 1 output node
     def build_model(self):
         self.model.add(Dense(4, input_dim=4, activation='relu'))
-        self.model.add(Dense(4, activation='relu'))
+        self.model.add(Dense(2, activation='relu'))
         self.model.add(Dense(1, activation='sigmoid'))
 
     def compile_model(self):

@@ -2,17 +2,33 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-def load_data_single_row(csv_path, input_columns, output_columns):
+# Dictionary to translate "Comportamiento" values
+comportamientos_translation = {
+    "D": "descanso",
+    "IM": "inmovil",
+    "A": "alerta",
+    "AA": "auto-acicalamiento",
+    "AL": "alimentacion",
+    "E": "exploracion",
+    "L": "locomocion",
+    "LR": "locomocion-repetitiva",
+    "LA": "locomocion-ascenso",
+    "LD": "locomocion-descenso",
+    "LI": "locomocion-invertida",
+    "O": "otros"
+}
+
+def generate_dataset_single_row(csv_path, input_columns, output_columns):
     """
-    Split the data from a CSV file into train, test, and validation sets.
+    Loads and transforms the csv file to a format suitable to train a neural network. 
 
     Args:
         csv_path (str): Path to the CSV file.
-        input_columns (list): List of column names to be extracted as inputs.
-        output_columns (list): List of column names to be extracted as outputs.
+        input_columns (list): List of column names to be extracted as inputs. Objects in the column must be float numbers.
+        output_columns (list): List of column names to be extracted as outputs for the dataset.
 
     Returns:
-        tuple: A tuple containing the train-test-validation split of the inputs and outputs selected.
+        dataset(str): Path to the converted CSV dataset.
     """
     # Load the data from the CSV file
     data = pd.read_csv(csv_path)
@@ -21,39 +37,31 @@ def load_data_single_row(csv_path, input_columns, output_columns):
     inputs = data[input_columns]
     outputs = data[output_columns]
 
-    # Extract output column names
-    output_names = outputs.columns
-    # For each output name, assign a code to the values
-    for output_name in output_names:
-        # Get the unique values in the output column
-        unique_values = outputs[output_name].unique()
-        # Create a dictionary to map the unique values to the codes
-        value_to_code = {value: code for code, value in enumerate(unique_values)}
-        # Replace the values in the output column with the codes
-        outputs[output_name] = outputs[output_name].map(value_to_code)
+    # Convert inputs data to numpy array. Exit if the input colums are not floating point numbers.
+    try:
+        inputs = inputs.to_numpy().astype(float)
+    except ValueError:
+        print("Error: Input columns must be floating point numbers.")
+        exit(1)
 
-    #Print dictionary
-    print(value_to_code)
+    # Convert inputs back to dataframe
+    inputs = pd.DataFrame(inputs)
 
-    # Convert dataframes to numpy arrays
-    inputs = inputs.to_numpy()
-    outputs = outputs.to_numpy()
+    # Convert outputs data according to the comportamientos_translation dictionary
+    outputs = outputs.replace(comportamientos_translation)
 
-    # Print the shape of the data
-    print(inputs.shape)
-    print(outputs.shape)
+    #Join the input and output dataframes
+    df = pd.concat([inputs, outputs], axis=1)
 
-    # Split the data into train, test, and validation sets
-    X_train, X_test, y_train, y_test = train_test_split(inputs, outputs, test_size=0.2, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42)
+    # Save the dataframe as a csv file with the original plus "_dataset_single_row" without column names
+    df.to_csv(csv_path[:-4]+"_dataset_single_row.csv", index=False, header=False)
 
-    return X_train, X_test, X_val, y_train, y_test, y_val
+    return csv_path[:-4]+"_dataset_single_row.csv"
 
-# Function that will add extract batches of 10 rows from the data requested based of the counts 1 to ten per minute in the column "Hora" in the csv
-def load_data_per_minute(csv_path, input_columns, output_columns):
+def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_per_second=10):
     """
-    Split the data from a CSV file into train, test, and validation sets.
-
+    Loads and transforms the csv file to a format suitable to train a neural network converting a fixed number of rows as different secuential inputs.
+    It assumes the data is ordered sequentially by second and that the rows per second are equal for every second
     Args:
         csv_path (str): Path to the CSV file.
         input_columns (list): List of column names to be extracted as inputs.
@@ -72,76 +80,58 @@ def load_data_per_minute(csv_path, input_columns, output_columns):
     print(inputs.head(3))
     print(outputs.head(3))
 
-    # Extract output column names
-    output_names = outputs.columns
-    # For each output name, assign a code to the values
-    for output_name in output_names:
-        # Get the unique values in the output column
-        unique_values = outputs[output_name].unique()
-        # Create a dictionary to map the unique values to the codes
-        value_to_code = {value: code for code, value in enumerate(unique_values)}
-        # Replace the values in the output column with the codes
-        outputs[output_name] = outputs[output_name].map(value_to_code)
-
-    #Print dictionary
-    print(value_to_code)
-
-    # Convert dataframes to numpy arrays
-    inputs = inputs.to_numpy()
-    outputs = outputs.to_numpy()
+    # Convert input dataframe to numpy array as float
+    inputs = inputs.to_numpy().astype(float)
 
     # Print the shape of the data
     print(inputs.shape)
     print(outputs.shape)
 
     # Create empty numpy array 10 times smaller than the original data and 10 times more columns for inputs
-    # Create the structured array, dtype=dt
-    inputs_per_minute = np.empty((int(len(inputs)/10), len(inputs[0])*10))
-    outputs_per_minute = np.empty((int(len(outputs)/10),len(outputs[0])))
+    inputs_per_second = np.empty((int(len(inputs)/rows_per_second), len(inputs[0])*rows_per_second))
+    # Create output per second dataframe with the original row size divided by rows_per_second
+    outputs_per_second = outputs.iloc[::rows_per_second, :]
 
     # Print the shape of the new data
-    print(inputs_per_minute.shape)
-    print(outputs_per_minute.shape)
+    print(inputs_per_second.shape)
+    print(outputs_per_second.shape)
     
-    # Extract the inputs and outputs per minute
-    for i in range (0, len(inputs),10):
-        for j in range (0,10):
+    # Extract the inputs and outputs per second
+    for i in range (0, len(inputs),rows_per_second):
+        # Loop over the following rows_per_second rows
+        for j in range (0,rows_per_second):
             for k in range (0, len(inputs[0])):
-                # Copy item from inputs to inputs_per_minute
+                # Copy item from inputs to inputs_per_second
                 # print(f"Assignig item {inputs[i+j][k]} from inputs[{i+j}][{k}]")
-                inputs_per_minute[int(i/10)][j*len(inputs[0])+k] = inputs[i+j][k]
+                inputs_per_second[int(i/rows_per_second)][j*len(inputs[0])+k] = inputs[i+j][k]
                 # Print values copied
-                # print(f"to inputs_per_minute[{int(i/10)}][{j*len(inputs[0])+k}] -> {inputs_per_minute[int(i/10)][j*len(inputs[0])+k]}")
-        # Populate the output for the current row
-        outputs_per_minute[int(i/10)] = outputs[i]
+                # print(f"to inputs_per_second[{int(i/10)}][{j*len(inputs[0])+k}] -> {inputs_per_second[int(i/10)][j*len(inputs[0])+k]}")
+                # Copy item from original outputs[i] to outputs_per_second[int(i/rows_per_second)]
+        # Assign corresponding output to outputs_per_second
+        outputs_per_second.loc[int(i/rows_per_second), output_columns] = outputs.loc[i, output_columns]
 
-    # Print single row of inputs_per_minute and outputs_per_minute
-    print(inputs_per_minute[0])
-    print(outputs_per_minute[0])
-
-    # Create new dataframe from inputs_per_minute and outputs_per_minute
-    df = pd.DataFrame(inputs_per_minute)
+    # Print single row of inputs_per_second and outputs_per_second
+    print(inputs_per_second[0])
+    print(outputs_per_second.iloc[0])
+    
+    # Create new dataframe from inputs_per_second
+    df = pd.DataFrame(inputs_per_second)
     # Add column names to the dataframe from adding _0 to _9 to the input_columns
     for i in range (0,10):
         for j in range (0, len(input_columns)):
             df.rename(columns={i*len(input_columns)+j:input_columns[j]+"_"+str(i)}, inplace=True)
     
-    df2 = pd.DataFrame(outputs_per_minute)
-    # Add only the original column names to the dataframe
-    for i in range (0, len(output_columns)):
-        df2.rename(columns={i:output_columns[i]}, inplace=True)
+    # Rename the output column according to the comportamientos_translation dictionary
+    outputs_per_second = outputs_per_second.replace(comportamientos_translation)
     
     # Join the two dataframes
-    df3 = pd.concat([df, df2], axis=1)
-    # Save the dataframe as a csv file
-    df3.to_csv("data_per_minute.csv", index=False)
+    df3 = pd.concat([df, outputs_per_second], axis=1)
 
+    # Save the dataframe as a csv file with the original plus "_dataset_per_second"
+    df3.to_csv(csv_path[:-4]+"_dataset_per_second.csv", index=False)
 
-    # Split the data into train, test, and validation sets
-    X_train, X_test, y_train, y_test = train_test_split(inputs_per_minute, outputs_per_minute, test_size=0.2, random_state=42)
-    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25, random_state=42)
-
-    return X_train, X_test, X_val, y_train, y_test, y_val
+    # Return the location of the new csv file
+    return csv_path[:-4]+"_dataset_per_second.csv"
 
 # Function to split the data per value in the specified column
 def split_csv_per_column(csv_path, column, max_unique_values=10):
@@ -169,21 +159,16 @@ def split_csv_per_column(csv_path, column, max_unique_values=10):
     for value in unique_values:
         # Create a dataframe for each unique value
         df = data.loc[data[column] == value]
-        # Save the dataframe as a csv file inside a folder named "split"
-        df.to_csv(f"/home/jbaez/Documents/utn/gintea/rnr-meleros/data/split/{value}.csv", index=False)
-
+        # Save the dataframe as a csv file with the original name plus the unique value
+        df.to_csv(csv_path[:-4]+"_"+str(value)+".csv", index=False)
 
 if __name__ == "__main__":
     # test with data from estudio3.csv
-    csv_path = "/home/jbaez/Documents/utn/gintea/rnr-meleros/data/Matilda.csv"
-    input_columns = ["X", "Y", "Z","ODBA"]
+    # csv_path = "../../data/base/resumen-comportamientos.csv"
+    # split_csv_per_column(csv_path, "Nombre", 15)
+    csv_path = "../../data/individual/resumen-comportamientos_Matilda.csv"
+    # input_columns = ["X", "Y", "Z","ODBA"]
+    input_columns = ["x", "y", "z","ODBA"]
     output_columns = ["Comportamiento"]
-    # split_csv_per_column(csv_path, "Nombre", 10)
-    X_train, X_test, X_val, y_train, y_test, y_val = load_data_per_minute(csv_path, input_columns, output_columns)
-    # X_train, X_test, X_val, y_train, y_test, y_val = load_data_single_row(csv_path, input_columns, output_columns)
-    # print(X_train.shape)
-    # print(X_test.shape)
-    # print(X_val.shape)
-    # print(y_train.shape)
-    # print(y_test.shape)
-    # print(y_val.shape)
+    # print(f"Generate dataset single row - Dataset: {generate_dataset_single_row(csv_path, input_columns, output_columns)}")
+    print(f"Generate dataset per second - Dataset: {generate_dataset_per_second(csv_path, input_columns, output_columns)}")
