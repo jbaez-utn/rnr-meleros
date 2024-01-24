@@ -46,15 +46,18 @@ def generate_dataset_single_row(csv_path, input_columns, output_columns):
 
     # Convert inputs back to dataframe
     inputs = pd.DataFrame(inputs)
+    # Change input column names back to x, y, z, ODBA
+    inputs.rename(columns={0:"x", 1:"y", 2:"z", 3:"ODBA"}, inplace=True)
 
     # Convert outputs data according to the comportamientos_translation dictionary
     outputs = outputs.replace(comportamientos_translation)
 
     #Join the input and output dataframes
     df = pd.concat([inputs, outputs], axis=1)
+    
 
     # Save the dataframe as a csv file with the original plus "_dataset_single_row" without column names
-    df.to_csv(csv_path[:-4]+"_dataset_single_row.csv", index=False, header=False)
+    df.to_csv(csv_path[:-4]+"_dataset_single_row.csv", index=False)
 
     return csv_path[:-4]+"_dataset_single_row.csv"
 
@@ -170,5 +173,5 @@ if __name__ == "__main__":
     # input_columns = ["X", "Y", "Z","ODBA"]
     input_columns = ["x", "y", "z","ODBA"]
     output_columns = ["Comportamiento"]
-    # print(f"Generate dataset single row - Dataset: {generate_dataset_single_row(csv_path, input_columns, output_columns)}")
-    print(f"Generate dataset per second - Dataset: {generate_dataset_per_second(csv_path, input_columns, output_columns)}")
+    print(f"Generate dataset single row - Dataset: {generate_dataset_single_row(csv_path, input_columns, output_columns)}")
+    # print(f"Generate dataset per second - Dataset: {generate_dataset_per_second(csv_path, input_columns, output_columns)}")

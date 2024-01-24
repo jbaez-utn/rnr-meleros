@@ -1,4 +1,4 @@
-from model import ClassicNN
+from models import ClassicNN
 from data import load_data_single_row
 from tensorflow.keras.optimizers import Adam
 
