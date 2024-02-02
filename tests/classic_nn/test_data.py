@@ -1,5 +1,5 @@
 import unittest
-from src.classic_nn import data
+from data_ingestion import data
 
 class TestData(unittest.TestCase):
     def setUp(self):

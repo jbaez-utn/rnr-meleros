@@ -1,0 +1,12 @@
+name: tf
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - tensorflow
+  - ipykernel
+  - pandas
+  - numpy=1.19
+  - seaborn
+  - scikit-learn
+prefix: /opt/conda/envs/tf

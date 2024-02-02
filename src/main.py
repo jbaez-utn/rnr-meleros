@@ -1,5 +1,5 @@
 from classic_nn.model import ClassicNN
-from classic_nn.data import load_data as load_classic_data
+from data_ingestion.data import load_data as load_classic_data
 from classic_nn.train import train_model as train_classic_model
 from rnn.model import RNN
 from rnn.data import load_data as load_rnn_data
