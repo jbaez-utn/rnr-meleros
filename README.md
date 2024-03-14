@@ -2,13 +2,23 @@
 
 Estudios para uso de Redes Neuronal Recurrentes (En ingles Recurrent Neural Network - RNN) aplicada sobre lecturas de acelerometro tomadas de Osos Meleros para predecir el comportamiento en tiempo real a partir de los valores medidos. 
 
-## Estatus y checklist
+## ToDo's
 
 - [X] Limpieza y analisis dataset inicial
-- [X] Prueba con distintos modelos (ver notebooks/dev) 
+- [X] Prueba con distintos modelos nn clasicas (ver notebooks/dev) 
 - [ ] Refactor del proyecto
-    - [ ] Nueva estructura 
-    - [ ] 
+    - [X] Nueva estructura
+    - [ ] Refactor modulos
+        - [ ] data
+        - [ ] visualizacion
+        - [ ] nn_model
+    - [ ] Nuevos notebooks de proceso
+        - [ ] Limpieza de datos
+        - [ ] Analisis de datos
+        - [ ] Entrenamiento
+        - [ ] Evaluacion
+- [ ] Implementar modulos y notebook RNR
+- [ ] Añadir soporte para DB
 
 ## Intro
 
