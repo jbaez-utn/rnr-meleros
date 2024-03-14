@@ -1,13 +1,15 @@
 # rnr-meleros
 
-Red Neuronal Recurrente (Recurrent Neural Network RNN) aplicada sobre lecturas de acelerometro tomadas de Osos Meleros para predecir el comportamiento en tiempo real a partir de los valores medidos. 
+Estudios para uso de Redes Neuronal Recurrentes (En ingles Recurrent Neural Network - RNN) aplicada sobre lecturas de acelerometro tomadas de Osos Meleros para predecir el comportamiento en tiempo real a partir de los valores medidos. 
 
 ## Intro
 
-Se planteo el problema como uno de clasificación, ya que se desea inferir el comportamiento del animal a partir de las lecturas de un Acelerometro de 3 ejes y del calculo instantaneo ODBA del animal. Se busca evaluar distintos tipos de topologias de redes neuronales para comparar su performance para este tipo de problemas. 
+Se planteo el problema como uno de clasificación, ya que se desea inferir el comportamiento del animal a partir de las lecturas de un Acelerometro de 3 ejes y del calculo instantaneo ODBA del animal. Se busca evaluar distintos tipos de topologias de redes neuronales para comparar su performance para este tipo de problemas. También se incluyen en la comparativa los algoritmos de clasificacion clasicos. 
 
 El repositorio contiene el codigo con el cual se implementaron:
 
+- Algoritmos de clasificacion:
+    - Clustering
 - Redes neuronales clasicas (Feedforward Neural Networks)
 - Redes neuronales recurrentes (Recurrent Neural Netwoks)
 
