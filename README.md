@@ -2,6 +2,14 @@
 
 Estudios para uso de Redes Neuronal Recurrentes (En ingles Recurrent Neural Network - RNN) aplicada sobre lecturas de acelerometro tomadas de Osos Meleros para predecir el comportamiento en tiempo real a partir de los valores medidos. 
 
+## Estatus y checklist
+
+- [X] Limpieza y analisis dataset inicial
+- [X] Prueba con distintos modelos (ver notebooks/dev) 
+- [ ] Refactor del proyecto
+    - [ ] Nueva estructura 
+    - [ ] 
+
 ## Intro
 
 Se planteo el problema como uno de clasificación, ya que se desea inferir el comportamiento del animal a partir de las lecturas de un Acelerometro de 3 ejes y del calculo instantaneo ODBA del animal. Se busca evaluar distintos tipos de topologias de redes neuronales para comparar su performance para este tipo de problemas. También se incluyen en la comparativa los algoritmos de clasificacion clasicos. 
