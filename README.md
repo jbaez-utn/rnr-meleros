@@ -33,6 +33,9 @@ El repositorio contiene el codigo con el cual se implementaron:
 
 ## Estructura
 
+El proyecto esta pensado para correr en un ambiente containerizado dentro de docker con una [imagen base de jupyter](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html), que internamente levanta el kernel de desarrollo con [mamba](https://mamba.readthedocs.io/en/latest/index.html) para mantener los paquetes y ambientes organizados. 
+
+Uso: En la terminal, corregir source ~/.bashrc y despues mamba activate dev-tf. 
 
 
 ## Trabajos a futuro

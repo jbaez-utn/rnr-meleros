@@ -1,12 +1,16 @@
-name: tf
+# Conda environment dev-tf
+name: dev-tf
 channels:
   - conda-forge
-  - defaults
 dependencies:
+  - python=3.10
   - tensorflow
-  - ipykernel
   - pandas
-  - numpy=1.19
-  - seaborn
+  - numpy
+  - scipy
   - scikit-learn
-prefix: /opt/conda/envs/tf
+  - matplotlib
+  - seaborn
+  - jupyter
+  - jupyterlab
+  - ipykernel
