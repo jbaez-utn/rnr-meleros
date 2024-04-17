@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 from sklearn.model_selection import train_test_split
 
-# Dictionary to translate "Comportamiento" values
+# Diccionario de valores de "Comportamiento" en el dataset
 comportamientos_translation = {
     "D": "descanso",
     "IM": "inmovil",
@@ -54,7 +55,6 @@ def generate_dataset_single_row(csv_path, input_columns, output_columns):
 
     #Join the input and output dataframes
     df = pd.concat([inputs, outputs], axis=1)
-    
 
     # Save the dataframe as a csv file with the original plus "_dataset_single_row" without column names
     df.to_csv(csv_path[:-4]+"_dataset_single_row.csv", index=False)
@@ -119,8 +119,8 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
     # print(outputs_per_second.iloc[0])
     
     # Shape after conversion
-    print(f"inputs_per_second shape: {inputs_per_second.shape} type: {type(inputs_per_second)}")
-    print(f"outputs_per_second shape: {outputs_per_second.shape} type: {type(outputs_per_second)}")
+    # print(f"inputs_per_second shape: {inputs_per_second.shape} type: {type(inputs_per_second)}")
+    # print(f"outputs_per_second shape: {outputs_per_second.shape} type: {type(outputs_per_second)}")
 
     # Create new dataframe from inputs_per_second
     df = pd.DataFrame(inputs_per_second)
@@ -129,8 +129,8 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
         for j in range (0, len(input_columns)):
             df.rename(columns={i*len(input_columns)+j:input_columns[j]+"_"+str(i)}, inplace=True)
 
-    print(f"df shape: {df.shape} type: {type(df)}")
-    print(f"outputs_per_second shape: {outputs_per_second.shape} type: {type(outputs_per_second)}")
+    # print(f"df shape: {df.shape} type: {type(df)}")
+    # print(f"outputs_per_second shape: {outputs_per_second.shape} type: {type(outputs_per_second)}")
 
     # Reset the index of outputs_per_second to be sure the resulting dataframe has the same index
     outputs_per_second.reset_index(drop=True, inplace=True)
@@ -138,7 +138,7 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
     # Join the two dataframes
     df3 = pd.concat([df, outputs_per_second], axis=1)
 
-    print(f"df3 shape: {df3.shape} type: {type(df3)}")
+    # print(f"df3 shape: {df3.shape} type: {type(df3)}")
 
 
     # Save the dataframe as a csv file with the original plus "_dataset_per_second"
@@ -175,6 +175,169 @@ def split_csv_per_column(csv_path, column, max_unique_values=10):
         df = data.loc[data[column] == value]
         # Save the dataframe as a csv file with the original name plus the unique value
         df.to_csv(csv_path[:-4]+"_"+str(value)+".csv", index=False)
+
+# Function to load the data from the CSV file, remove nan values, and return the dataframe
+def dataframe_from_csv(csv_path):
+    """
+    Load the data from a CSV file and return the dataframe.
+
+    Args:
+        csv_path (str): Path to the CSV file.
+
+    Returns:
+        DataFrame: A pandas DataFrame containing the data from the CSV file.
+    """
+    # Load the data from the CSV file with pandas
+    data = pd.read_csv(csv_path)
+    # Remove the rows with NaN values
+    data = data.dropna()
+    # Return the dataframe
+    return data
+
+# Function to remove outliers
+def remove_outliers_single_column(data, column, threshold=3)->pd.DataFrame:
+    """
+    Remove the outliers from a column in a dataframe.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        column (str): The column name to remove the outliers.
+        threshold (int): The threshold to consider a value an outlier.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the outliers removed.
+    """
+    # Calculate the z-score for the column
+    z = np.abs((data[column] - data[column].mean()) / data[column].std())
+    # Remove the rows with z-score greater than the threshold
+    data = data[z < threshold]
+    # Return the dataframe
+    return data
+
+# Function to remove outliers from multiple columns
+def remove_outliers_multiple_columns(data, columns, threshold=3)->pd.DataFrame:
+    """
+    Remove the outliers from multiple columns in a dataframe.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        columns (list): A list of column names to remove the outliers.
+        threshold (int): The threshold to consider a value an outlier.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the outliers removed.
+    """
+    # Loop over the columns
+    for column in columns:
+        # Remove the outliers from the column
+        data = remove_outliers_single_column(data, column, threshold)
+    # Return the dataframe
+    return data
+
+# Function to scale the data in a single colum with the MinMaxScaler
+def scale_single_column(data, column)->pd.DataFrame:
+    """
+    Scale the data in a single column with the MinMaxScaler.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        column (str): The column name to scale.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the column scaled.
+    """
+    # Create the MinMaxScaler object
+    scaler = MinMaxScaler()
+    # Fit the scaler to the data
+    scaler.fit(data[[column]])
+    # Scale the data
+    data[column] = scaler.transform(data[[column]])
+    # Return the dataframe
+    return data
+
+# Function to scale the data in multiple columns with the MinMaxScaler
+def scale_multiple_columns(data, columns)->pd.DataFrame:
+    """
+    Scale the data in multiple columns with the MinMaxScaler.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        columns (list): A list of column names to scale.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the columns scaled.
+    """
+    # Loop over the columns
+    for column in columns:
+        # Scale the data in the column
+        data = scale_single_column(data, column)
+    # Return the dataframe
+    return data
+
+# Function to encode data from single column using label encoder
+def encode_single_column(data, column)->pd.DataFrame:
+    """
+    Encode the data from a single column using label encoder.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        column (str): The column name to encode.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the column encoded.
+    """
+    # Create the label encoder object
+    le = LabelEncoder()
+    # Fit the label encoder to the data
+    data[column] = le.fit_transform(data[column])
+    # Return the dataframe
+    return data
+
+# Function to encode data from columns with categorical values
+def encode_categorical_columns(data, columns)->pd.DataFrame:
+    """
+    Encode the data from columns with categorical values using label encoder.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        columns (list): A list of column names to encode.
+
+    Returns:
+        DataFrame: A pandas DataFrame with the columns encoded.
+    """
+    # Loop over the columns
+    for column in columns:
+        # Encode the data in the column
+        data = encode_single_column(data, column)
+    # Return the dataframe
+    return data
+
+# Function to split the data into train, test, and validation sets
+def split_data_train_test_validation(data, input_columns, output_columns, test_size=0.2, val_size=0.1):
+    """
+    Split the data into train, test, and validation sets.
+
+    Args:
+        data (DataFrame): A pandas DataFrame containing the data.
+        input_columns (list): A list of column names to be used as inputs.
+        output_columns (list): A list of column names to be used as outputs.
+        test_size (float): The size of the test set.
+        val_size (float): The size of the validation set.
+
+    Returns:
+        tuple: A tuple containing the train-test-validation split of the inputs and outputs selected.
+    """
+    # Split the data into inputs and outputs
+    X = data[input_columns]
+    y = data[output_columns]
+    # Split the data into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size)
+    # Split the data into train and validation sets
+    X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=val_size)
+    # Return the train-test-validation split
+    return X_train, X_test, X_val, y_train, y_test, y_val
+
+
 
 if __name__ == "__main__":
     # test with data from estudio3.csv
