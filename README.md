@@ -38,10 +38,15 @@ El proyecto esta pensado para correr en un ambiente containerizado dentro de doc
 
 Uso: En la terminal, corregir source ~/.bashrc y despues mamba activate dev-tf. 
 
+Comandos para buildear la imagen y lanzar el contenedor de desarrollo:
+
+´´´
+$ docker build --rm -t dev-env .
+$ docker run -i -t -p 8888:8888 -v "${PWD}":/home/jovyan/meleros dev-env
+´´´
 
 ## Trabajos a futuro
 
 - Usar los modelos mejor performantes para realizar la clasificacion en tiempo real y contrastar con datos de una camara en tiempo real.
 - Validar los modelos con otro/s dispositivo/s de medicion (Datalogger de otras marcas, agregar giroscopo, etc.)
 - Implementar los mejores modelos para este caso de uso embebidas en el dispositivo de medición para detectar y relevar los comportamientos directamente en el dispositivo de medicion. 
-
