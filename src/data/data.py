@@ -19,7 +19,7 @@ comportamientos_translation = {
     "O": "otros"
 }
 
-def generate_dataset_single_row(csv_path, input_columns, output_columns):
+def generate_dataset_single_row(csv_path, input_columns, output_columns) -> str:
     """
     Loads and transforms the csv file to a format suitable to train a neural network. 
 
@@ -61,7 +61,7 @@ def generate_dataset_single_row(csv_path, input_columns, output_columns):
 
     return csv_path[:-4]+"_dataset_single_row.csv"
 
-def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_per_second=10):
+def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_per_second=10) -> str:
     """
     Loads and transforms the csv file to a format suitable to train a neural network converting a fixed number of rows as different secuential inputs.
     It assumes the data is ordered sequentially by second and that the rows per second are equal for every second
@@ -148,7 +148,7 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
     return csv_path[:-4]+"_dataset_per_second.csv"
 
 # Function to split the data per value in the specified column
-def split_csv_per_column(csv_path, column, max_unique_values=10):
+def split_csv_per_column(csv_path, column, max_unique_values=10) -> None:
     """
     Split the data from a CSV file into train, test, and validation sets.
 

@@ -12,6 +12,7 @@ Estudios para uso de Redes Neuronal Recurrentes (En ingles Recurrent Neural Netw
         - [ ] data
         - [ ] visualizacion
         - [ ] nn_model
+        - [ ] implementar logs
     - [ ] Nuevos notebooks de proceso
         - [ ] Limpieza de datos
         - [ ] Analisis de datos
