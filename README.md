@@ -49,7 +49,7 @@ $ docker run -i -t -p 8888:8888 -v "${PWD}":/home/jovyan/meleros dev-env
 
 ### VSCode usando kernel del server 
 
-Si usas vscode, para conectar el kernel hay que poner en el existing jupyter server:
+Si usas vscode, para conectar el kernel hay que poner en _existing jupyter server_:
 
 http://127.0.0.1:8888/tree
 
