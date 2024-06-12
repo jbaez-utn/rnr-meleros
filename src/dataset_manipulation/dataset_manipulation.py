@@ -61,7 +61,7 @@ def generate_dataset_single_row(csv_path, input_columns, output_columns) -> str:
 
     return csv_path[:-4]+"_dataset_single_row.csv"
 
-def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_per_second=10) -> str:
+def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_per_second=10, output_path="./") -> str:
     """
     Loads and transforms the csv file to a format suitable to train a neural network converting a fixed number of rows as different secuential inputs.
     It assumes the data is ordered sequentially by second and that the rows per second are equal for every second
@@ -75,6 +75,8 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
     """
     # Load the data from the CSV file with pandas
     data = pd.read_csv(csv_path)
+    # Extract file name from csv_path
+    file_name = csv_path.split("/")[-1]
     # Extract the input and output columns from the data
     inputs = data[input_columns]
     outputs = data[output_columns]
@@ -141,11 +143,11 @@ def generate_dataset_per_second(csv_path, input_columns, output_columns, rows_pe
     # print(f"df3 shape: {df3.shape} type: {type(df3)}")
 
 
-    # Save the dataframe as a csv file with the original plus "_dataset_per_second"
-    df3.to_csv(csv_path[:-4]+"_dataset_per_second.csv", index=False)
+    # Save the dataframe as a csv file with the original plus "_1seg"
+    df3.to_csv(output_path + file_name +"_1seg.csv", index=False)
 
     # Return the location of the new csv file
-    return csv_path[:-4]+"_dataset_per_second.csv"
+    return output_path + file_name +"_1seg.csv"
 
 # Function to split the data per value in the specified column
 def split_csv_per_column(csv_path, column, max_unique_values=10) -> None:
@@ -344,10 +346,14 @@ if __name__ == "__main__":
     csv_path = "../../data/0-cruda/estudio3.csv"
     # input_columns = ["X", "Y", "Z","ODBA"]
     input_columns = ["X", "Y", "Z","ODBA"]
-    output_columns = ["Comportamiento"]
+    output_columns = ["Comportamiento", "Sexo"]
     # print(f"Generate dataset single row - Dataset: {generate_dataset_single_row(csv_path, input_columns, output_columns)}")
-    print(f"Generate dataset per second - Dataset: {generate_dataset_per_second(csv_path, input_columns, output_columns)}")
+    print(f"Generate dataset per second - Dataset: {1}")
+    generate_dataset_per_second(csv_path, input_columns, output_columns, 10, "../../data/1-intermedia/")
+    split_csv_per_column("../../data/1-intermedia/estudio3_1seg.csv", 'Sexo')
     input_columns = ["x", "y", "z","ODBA"]
     csv_path = "../../data/0-cruda/tabla-resumen.csv"
-    print(f"Generate dataset per second - Dataset: {generate_dataset_per_second(csv_path, input_columns, output_columns)}")
+    print(f"Generate dataset per second - Dataset: {2}")
+    generate_dataset_per_second(csv_path, input_columns, output_columns, 10, "../../data/1-intermedia/")
+    split_csv_per_column("../../data/1-intermedia/tabla-resumen_1seg.csv", 'Sexo')
     
