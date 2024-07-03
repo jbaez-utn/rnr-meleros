@@ -5,12 +5,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import numpy as np
 
-def load_dataset(filename):
-    # Placeholder function to load dataset
-    # In reality, you would implement this to load your specific data format
-    # Return X (features) and y (labels)
-    pass
-
 def create_model(input_shape, output_shape, topology):
     model = Sequential()
     model.add(Dense(topology[0], activation='relu', input_shape=(input_shape,)))

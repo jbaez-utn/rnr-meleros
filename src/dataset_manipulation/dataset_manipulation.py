@@ -343,14 +343,14 @@ def split_data_train_test_validation(data, input_columns, output_columns, test_s
 
 if __name__ == "__main__":
     # test with data from estudio3.csv
-    csv_path = "../../data/0-cruda/estudio3.csv"
+    csv_path = "../../data/1-intermedia/estudio3_normalizado.csv"
     # input_columns = ["X", "Y", "Z","ODBA"]
     input_columns = ["X", "Y", "Z","ODBA"]
     output_columns = ["Comportamiento", "Sexo"]
     # print(f"Generate dataset single row - Dataset: {generate_dataset_single_row(csv_path, input_columns, output_columns)}")
     print(f"Generate dataset per second - Dataset: {1}")
     generate_dataset_per_second(csv_path, input_columns, output_columns, 10, "../../data/1-intermedia/")
-    split_csv_per_column("../../data/1-intermedia/estudio3_1seg.csv", 'Sexo')
+    split_csv_per_column("../../data/1-intermedia/estudio3_normalizado.csv_1seg.csv", 'Sexo')
     input_columns = ["x", "y", "z","ODBA"]
     csv_path = "../../data/0-cruda/tabla-resumen.csv"
     print(f"Generate dataset per second - Dataset: {2}")
