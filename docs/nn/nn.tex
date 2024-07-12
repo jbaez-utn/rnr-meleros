@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{neuralnetwork}
+\usepackage{geometry}
+\usepackage{titlesec}
+
+\geometry{margin=1cm}
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}[{\titlerule[0.8pt]}]
+
+\begin{document}
+	
+	\section{Neural Network with 1 Hidden Layer}
+	
+	\begin{neuralnetwork}[height=15]
+		\newcommand{\x}[2]{$x_{\text{#1}}$}
+		\newcommand{\y}[2]{$y_{\text{#1}}$}
+		\newcommand{\z}[2]{$z_{\text{#1}}$}
+		\newcommand{\odba}[2]{$\text{ODBA}_{\text{#1}}$}
+		\inputlayer[count=40, title=Input\\40 units, text=\x{0},\y{0},\z{0},\odba{0},\dots,\x{9},\y{9},\z{9},\odba{9}]
+		\hiddenlayer[count=20, title=Hidden layer\\20 units]
+		\outputlayer[count=12, title=Output\\12 units, text=AA, AL, D, E, IM, L, LA, LD, LI, LR, NV, O]
+	\end{neuralnetwork}
+	
+	\section{Neural Network with 2 Hidden Layers}
+	
+	\begin{neuralnetwork}[height=15]
+		\newcommand{\x}[2]{$x_{\text{#1}}$}
+		\newcommand{\y}[2]{$y_{\text{#1}}$}
+		\newcommand{\z}[2]{$z_{\text{#1}}$}
+		\newcommand{\odba}[2]{$\text{ODBA}_{\text{#1}}$}
+		\inputlayer[count=40, title=Input\\40 units, text=\x{0},\y{0},\z{0},\odba{0},\dots,\x{9},\y{9},\z{9},\odba{9}]
+		\hiddenlayer[count=30, title=Hidden layer 1\\30 units]
+		\hiddenlayer[count=15, title=Hidden layer 2\\15 units]
+		\outputlayer[count=12, title=Output\\12 units, text=AA, AL, D, E, IM, L, LA, LD, LI, LR, NV, O]
+	\end{neuralnetwork}
+	
+	\section{Neural Network with 3 Hidden Layers}
+	
+	\begin{neuralnetwork}[height=15]
+		\newcommand{\x}[2]{$x_{\text{#1}}$}
+		\newcommand{\y}[2]{$y_{\text{#1}}$}
+		\newcommand{\z}[2]{$z_{\text{#1}}$}
+		\newcommand{\odba}[2]{$\text{ODBA}_{\text{#1}}$}
+		\inputlayer[count=40, title=Input\\40 units, text=\x{0},\y{0},\z{0},\odba{0},\dots,\x{9},\y{9},\z{9},\odba{9}]
+		\hiddenlayer[count=35, title=Hidden layer 1\\35 units]
+		\hiddenlayer[count=25, title=Hidden layer 2\\25 units]
+		\hiddenlayer[count=15, title=Hidden layer 3\\15 units]
+		\outputlayer[count=12, title=Output\\12 units, text=AA, AL, D, E, IM, L, LA, LD, LI, LR, NV, O]
+	\end{neuralnetwork}
+	
+\end{document}
