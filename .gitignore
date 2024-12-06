@@ -166,3 +166,6 @@ data/1-intermedia/*
 data/2-procesada/*
 
 docs/referencias/*
+
+# Mlflow
+mlruns
